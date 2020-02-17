@@ -1,1 +1,6 @@
-Placeholder to create folder
+The solution can be downloaded as a zip file and unzipped locally. 
+If there are plans to make updates to the project, then clone the project locally:
+- first install Githb desktop: https://desktop.github.com/       
+- clone the project
+The solution can be opened in Visual Studio. 
+If updates are made that should be pushed back to the Github repo, then use Github desktop to commit and push the changes. 
