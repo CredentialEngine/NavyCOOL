@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 using Solid.Models;
-using ThisEntity = Solid.Models.Agency;
+using ThisEntity = Solid.Models.AgencyDTO;
 using ThisRequest = RA.Models.Input.OrganizationRequest;
 using ThisRequestEntity = RA.Models.Input.Organization;
 using RA.Models.Input;
@@ -18,6 +18,33 @@ namespace COOLTool.Services
 {
 	public class PublishOrganization : MappingHelpers
 	{
+		public bool Publish(int credentialId, string publisherApiKey, ref List<string> messages, string community = "")
+		{
+			bool isValid = true;
+			//get and populate an agency DTO
+			//TBD
+			ThisEntity input = new ThisEntity()
+			{
+				CA_AgencyID = 1,
+				CA_AgencyName = "Test Organization",
+				CA_AgencyPhonePrimary = "800-555-1212",
+				CA_AgencyContact = "email@email.com",
+				CA_AgencyHomePageURL = "http://example.com",
+				CA_AgencyStreetAddress1 = "",
+				CA_AgencyCity = "",
+				CA_AgencyZip = "",
+				CA_AgencyState = "",
+				CA_AgencyCountry = "",
+			};				;
+			//call a method to fill out the credential DTO
+
+			string owningOrgCtid = "??";
+
+			var payload = Publish( input, publisherApiKey, ref isValid, ref messages, community );
+
+			return isValid;
+		}
+
 		/// <summary>
 		/// Publish an agency record
 		/// </summary>
@@ -30,7 +57,7 @@ namespace COOLTool.Services
 		/// <param name="community">Blank if using the default community, or navy</param>
 		/// <returns>organization formatted as JSON-LD (Payload) from the registry</returns>
 		/// <returns></returns>
-		public string Publish(ThisEntity input, string publisherApiKey, ref bool isValid, ref List<string> messages, ref string crEnvelopeId, string community = "")
+		public string Publish(ThisEntity input, string publisherApiKey, ref bool isValid, ref List<string> messages, string community = "")
 		{
 			var request = new ThisRequest();
 			request.DefaultLanguage = "en-US";
@@ -75,7 +102,7 @@ namespace COOLTool.Services
 			isValid = new RServices().PublishRequest( req );
 			messages.AddRange( req.Messages );
 			//ReportRelatedEntitiesToBePublished( ref messages );
-			crEnvelopeId = req.EnvelopeIdentifier ?? "";
+			var crEnvelopeId = req.EnvelopeIdentifier ?? "";
 			if ( !isValid )
 			{
 				//anything??
@@ -119,13 +146,13 @@ namespace COOLTool.Services
 				Country = !string.IsNullOrWhiteSpace( input.CA_AgencyCountry ) ? input.CA_AgencyCountry : "United States"
 			};
 			//a phone number is added to a contact point property in the place/address
-			if (!string.IsNullOrWhiteSpace(input.CA_PhoneNumber))
+			if (!string.IsNullOrWhiteSpace(input.CA_AgencyPhonePrimary))
 			{
 				var cp = new RA.Models.Input.ContactPoint
 				{
 					Name = "Contact"
 				};
-				cp.PhoneNumbers.Add( input.CA_PhoneNumber );
+				cp.PhoneNumbers.Add( input.CA_AgencyPhonePrimary );
 				place.ContactPoint.Add( cp );
 			}
 			output.Address.Add( place );

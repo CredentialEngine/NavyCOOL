@@ -51,7 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="AssessmentManager.cs" />
     <Compile Include="CredentialManager.cs" />
     <Compile Include="OrganizationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -60,6 +60,10 @@
     <ProjectReference Include="..\COOLTool.Models\COOLTool.Models.csproj">
       <Project>{286c06b5-0fa7-4639-b2d4-a65da0ba8814}</Project>
       <Name>COOLTool.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Solid.Models\Solid.Models.csproj">
+      <Project>{d9fd7753-10cc-4eb6-8ac3-570b0a443ee2}</Project>
+      <Name>Solid.Models</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

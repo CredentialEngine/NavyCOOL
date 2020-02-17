@@ -68,13 +68,13 @@ moc_credential.MOCCE_LinkedAs
 
 		//what is the FK to the owning organization
 		//could get org ctid by reading agency
-		public string OwnedByCTID { get; set; }
+		public string OwnedByOrganizationCTID { get; set; }
 		//Certificate, License
 		public string CredentialType { get; set; }
 
 
 		//provider
-		public Agency Agency { get; set; } = new Agency();
+		public AgencyDTO Agency { get; set; } = new AgencyDTO();
 
 		public string ProviderName
 		{
@@ -138,7 +138,7 @@ moc_credential.MOCCE_LinkedAs
 
 		#endregion
 
-		public List<FinancialAssistance> FinancialAssistance { get; set; } = new List<FinancialAssistance>();
+		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; } = new List<FinancialAssistanceProfile>();
 
 		public List<JurisdictionProfile> Jurisdiction { get; set; }
 

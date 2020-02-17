@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Solid.Models
 {
-	public class FinancialAssistance
+	public class FinancialAssistanceProfile
 	{
 
 		public string Name { get; set; }

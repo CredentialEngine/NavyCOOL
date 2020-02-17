@@ -58,6 +58,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\COOL.Factories\COOL.Factories.csproj">
+      <Project>{abd281c6-0bc7-4d02-bf6d-5fe204353aac}</Project>
+      <Name>COOL.Factories</Name>
+    </ProjectReference>
     <ProjectReference Include="..\COOLTool.Services\COOLTool.Services.csproj">
       <Project>{c1145660-86ed-436d-91d6-b7c5867fa2d4}</Project>
       <Name>COOLTool.Services</Name>

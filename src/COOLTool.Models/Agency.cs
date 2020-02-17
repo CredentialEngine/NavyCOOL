@@ -1,9 +1,8 @@
+using System;
+using System.Collections.Generic;
 
 namespace COOLTool.Models
-{
-    using System;
-    using System.Collections.Generic;
-    
+{    
     public partial class Agency
     {
         public Agency()
@@ -44,5 +43,19 @@ namespace COOLTool.Models
 
         //additions
         public string CTID { get; set; }
+        //TODO - should require an email where the organization will be automatically added the CE accounts site.
+
+        /// <summary>
+        /// Apparantly a description is available somewhere?
+        /// </summary>
+        public string Description { get; set; }
+        public List<string> AgentType { get; set; } = new List<string>();
+        /*
+		 * Private For-Profit  
+		 * Private Not-For-Profit  
+		 * Public Institution 
+		 * 
+		 */
+        public string AgentSectorType { get; set; }
     }
 }

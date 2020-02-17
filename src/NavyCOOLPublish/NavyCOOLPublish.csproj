@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseServices.cs" />
+    <Compile Include="ManageAssessments.cs" />
     <Compile Include="ManageCredentials.cs" />
     <Compile Include="ManageOrganizations.cs" />
     <Compile Include="Models\RequestParameters.cs" />

@@ -102,8 +102,6 @@ namespace COOLTool.Services
 		public bool PostRequest(AssistantRequestHelper request)
 		{
 			RAResponse response = new RAResponse();
-			//this is only used by CE, and should be blank otherwise
-			string apiPublisherIdentifier = UtilityManager.GetAppKeyValue( "apiPublisherIdentifier" );
 
 			LoggingHelper.DoTrace( 6, string.Format( thisClassName + ".PostRequest, RequestType: {0}, CTID: {1}", request.RequestType, request.CTID ) );
 			try
@@ -112,8 +110,6 @@ namespace COOLTool.Services
 				{
 					client.DefaultRequestHeaders.
 						Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
-					//for initial prototyping, check for OrganizationApiKey
-					//if ( UtilityManager.GetAppKeyValue( "Environment" ) != "production" && 
 					if ( string.IsNullOrWhiteSpace( request.AuthorizationToken ) )
 						request.AuthorizationToken = request.PublisherApiKey;
 
@@ -121,10 +117,6 @@ namespace COOLTool.Services
 					{
 						client.DefaultRequestHeaders.Add( "Authorization", "ApiToken " + request.AuthorizationToken );
 					}
-
-					//add special header for the publisher
-					if ( !string.IsNullOrWhiteSpace( apiPublisherIdentifier ) )
-						client.DefaultRequestHeaders.Add( "Proxy-Authorization", apiPublisherIdentifier );
 
 					var task = client.PostAsync( request.EndpointUrl,
 						new StringContent( request.InputPayload, Encoding.UTF8, "application/json" ) );
@@ -198,8 +190,6 @@ namespace COOLTool.Services
 			//might use one delete endpoint, as adding code to handle this.
 			string endpointUrl = serviceUri + string.Format( "{0}/delete", requestType );
 
-			//RAResponse response = new RAResponse();
-			string apiPublisherIdentifier = UtilityManager.GetAppKeyValue( "apiPublisherIdentifier" );
 			DeleteRequest dr = new DeleteRequest()
 			{
 				CTID = CTID,
@@ -220,10 +210,6 @@ namespace COOLTool.Services
 					{
 						client.DefaultRequestHeaders.Add( "Authorization", "ApiToken " + authorizationToken );
 					}
-
-					//add special header for the publisher
-					if ( !string.IsNullOrWhiteSpace( apiPublisherIdentifier ) )
-						client.DefaultRequestHeaders.Add( "Proxy-Authorization", apiPublisherIdentifier );
 
 					HttpRequestMessage hrm = new HttpRequestMessage
 					{

@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Address.cs" />
+    <Compile Include="AssessmentDTO.cs" />
     <Compile Include="BaseObject.cs" />
     <Compile Include="BaseProfile.cs" />
     <Compile Include="ConditionProfile.cs" />
@@ -54,9 +55,10 @@
     <Compile Include="CredentialAlignmentObject.cs" />
     <Compile Include="Cred_Requirements.cs" />
     <Compile Include="Cred_ResourceIcons.cs" />
+    <Compile Include="DurationProfile.cs" />
     <Compile Include="Enumeration.cs" />
-    <Compile Include="Agency.cs" />
-    <Compile Include="FinancialAssistance.cs" />
+    <Compile Include="AgencyDTO.cs" />
+    <Compile Include="FinancialAssistanceProfile.cs" />
     <Compile Include="Jurisdiction.cs" />
     <Compile Include="JurisdictionProfile.cs" />
     <Compile Include="MOC_Credential.cs" />

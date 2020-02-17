@@ -45,7 +45,7 @@ namespace Solid.Models
 		/// Organization that asserts this condition
 		/// This should be single, but as CTDL defines as multi-value, need to handle a List
 		/// </summary>
-		public List<Agency> AssertedBy { get; set; } = new List<Agency>();
+		public List<AgencyDTO> AssertedBy { get; set; } = new List<AgencyDTO>();
 
 		public string Experience { get; set; }
 		public int MinimumAge { get; set; }

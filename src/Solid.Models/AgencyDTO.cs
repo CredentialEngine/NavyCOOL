@@ -6,9 +6,9 @@ using System.Linq;
 namespace Solid.Models
 {
     [Serializable]
-    public class Agency
+    public class AgencyDTO
 	{
-		public Agency()
+		public AgencyDTO()
 		{
 			ISQAOrganization = false;
 			IsACredentialingOrg = true;
@@ -33,7 +33,7 @@ namespace Solid.Models
 		public string CA_AgencyState { get; set; }
 		public string CA_AgencyZip { get; set; }
 		public string CA_AgencyCountry { get; set; }
-		public string CA_PhoneNumber { get; set; }
+		public string CA_AgencyPhonePrimary { get; set; }
 
 		//note: this should be the home page. 
 		//For FAA it is a support page: Submit a question to our support team

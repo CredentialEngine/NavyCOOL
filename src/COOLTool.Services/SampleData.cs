@@ -18,9 +18,9 @@ namespace COOLTool.Services
 
 		public static string GI_BILL = @"Reimbursement for exam fees has been approved for payment through the GI Bill. Click for external link to GI Bill licensing and certification information. Note: GI Bill approval data is updated quarterly. For the latest information, visit the WEAMS Licenses/Certifications Search page. Make sure to select 'Both' in the LAC Category Type drop-down before searching.";
 
-		public static Agency Get_FAA()
+		public static AgencyDTO Get_FAA()
 		{
-			Agency agency = new Agency();
+			AgencyDTO agency = new AgencyDTO();
 			//
 			agency.CTID = FAA_CTID;
 			agency.CA_AgencyName = "Federal Aviation Administration (FAA)";
@@ -29,7 +29,7 @@ namespace COOLTool.Services
 			agency.CA_AgencyState = "DC";
 			agency.CA_AgencyZip = "20591";
 			agency.CA_AgencyCountry = "USA";
-			agency.CA_PhoneNumber = "(866) 835-5322";
+			agency.CA_AgencyPhonePrimary = "(866) 835-5322";
 			//note cool site has a link to a help page
 			/// http://faa.custhelp.com/app/ask
 			agency.CA_AgencyHomePageURL = "https://www.faa.gov/";

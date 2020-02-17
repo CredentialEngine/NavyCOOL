@@ -41,7 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Address.cs" />
     <Compile Include="Agency.cs" />
+    <Compile Include="Assessment.cs" />
     <Compile Include="Credential.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

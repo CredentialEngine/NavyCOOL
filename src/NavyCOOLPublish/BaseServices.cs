@@ -18,7 +18,6 @@ namespace NavyCOOLPublish
 		static int pTotalRows = 0;
 		static bool isValid = true;
 		static List<string> messages = new List<string>();
-		static bool usingRegistryAssistant = UtilityManager.GetAppKeyValue( "usingRegistryAssistantForMapping", false );
 
 
 		public static void SetParameters(RequestParameters parms)

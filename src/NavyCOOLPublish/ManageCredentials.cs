@@ -13,10 +13,15 @@ namespace NavyCOOLPublish
 {
 	public class ManageCredentials : BaseServices
 	{
-		public void Publish()
+		/// <summary>
+		/// Handle publishing
+		/// </summary>
+		/// <param name="publisherApiKey">Typically retrieved from a database or as an appKey</param>
+		public void Publish(string publisherApiKey)
 		{
 			RequestParameters parms = new RequestParameters( 1 );
 			SetParameters( parms );
+			var community = UtilityManager.GetAppKeyValue( "requestedCommunity" );
 			//RegistryServices mgr = new RegistryServices();
 			//set to null to skip history method
 			//List<SiteActivity> history = null; // new List<SiteActivity>();
@@ -30,7 +35,7 @@ namespace NavyCOOLPublish
 			//string filter = "";
 
 			//string payloadPrefix = GetPayloadFilePrefix();
-
+			
 			if( !parms.DoingPublish && !parms.DoingGenerate )
 			{
 				DisplayMessages( "CredentialPublishing - NO ACTION REQUESTS ENDING" );
@@ -42,12 +47,11 @@ namespace NavyCOOLPublish
 
 			DisplayMessages( "Starting credentials, with filter: \r\n" + parms.Filter );
 
-			string publisherApiKey = "";//TBD get from somewhere
 			int pTotalRows = 0;
 			List<string> messages = new List<string>();
 			//do search with minimum results (autocomplete = true)
 			var list = CredentialManager.Search( parms.Filter, parms.OrderBy, parms.PageNumber, parms.PageSize, ref pTotalRows );
-
+			if ( list != null && list.Count() > 0)
 			{
 				int cntr = 0;
 				foreach( var item in list )
@@ -58,15 +62,8 @@ namespace NavyCOOLPublish
 					DisplayMessages( string.Format( " {0}.	Credential: {1} ({2})", cntr, item.CE_CertTitle, item.CE_CertID ) );
 					if( parms.DoingPublish )
 					{
-						if( parms.DoingDeleteBeforePublish )
-						{
-							//if( !mgr.Unregister_Credential( item.Id, user, ref statusMessage, ref history ) )
-							//{
-							//	DisplayMessages( "                           - UNREGISTER FAILED: " + statusMessage );
-							//}
-						}
 						//Note that will target the Navy community
-						if( ! new PublishCredential().Publish( item.CE_CertID, publisherApiKey, ref messages, "navy" ) )
+						if( ! new PublishCredential().Publish( item.CE_CertID, publisherApiKey, ref messages, community ) )
 						{
 							DisplayMessages( "                           - FAILED: " + statusMessage );
 							LoggingHelper.LogError( string.Format( "{0} #:{1} Publish failed: {2} ", parms.EntityType, item.CE_CertID, statusMessage ), false );

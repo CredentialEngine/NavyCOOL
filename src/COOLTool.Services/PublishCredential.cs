@@ -20,26 +20,26 @@ namespace COOLTool.Services
 		public bool Publish(int credentialId, string publisherApiKey, ref List<string> messages, string community = "")
 		{
 			bool isValid = true;
-			//get and populate a credential DTO
+			//get by credentialId and populate a credential DTO
 			//TBD
 			COOLCredential input = new COOLCredential()
 			{
-				CE_CertID = 1,
+				CE_CertID = credentialId,
 				CE_CertTitle = "My Test",
 				CE_CertDescription = "My description",
 				CE_CertAcronym = "Acro",
 				CE_CertURL = "http://example.com/navyCool/1",
 				CredentialStatusType = "Active",
 				CredentialType = "License", 
-				CTID = "ce-" + Guid.NewGuid().ToString().ToLower()
+				CTID = "ce-" + Guid.NewGuid().ToString().ToLower(),
+				OwnedByOrganizationCTID = "ce-" + Guid.NewGuid().ToString().ToLower()
 				//etc
 			}
 				;
 			//call a method to fill out the credential DTO
-			
-			string owningOrgCtid = "??";
 
-			var payload = Publish( input, publisherApiKey, owningOrgCtid, ref isValid, ref messages, community );
+
+			var payload = Publish( input, publisherApiKey, ref isValid, ref messages, community );
 
 			return isValid;
 		}
@@ -49,13 +49,11 @@ namespace COOLTool.Services
 		/// </summary>
 		/// <param name="input">Credential record</param>
 		/// <param name="publisherApiKey">Provided the ApiKey of the publisher (COOL)</param>
-		/// <param name="owningOrgCtid">The CTID for the owning org could be in the credential data (ex: added ProviderCTID). If not then this parameter could be used.</param>
 		/// <param name="isValid">Returns true or false if publish fails.</param>
 		/// <param name="messages">Returns any error message if publish fails. Note: warning messages can be returned even if isValid is true.</param>
-		/// <param name="crEnvelopeId">The identifier from the registry is returned. It could be stored to enable lookup by the envelopeId - or ignored.</param>
 		/// <param name="community">Blank if using the default community, or navy</param>
 		/// <returns>Credential formatted as JSON-LD (Payload) from the registry</returns>
-		public string Publish(COOLCredential input, string publisherApiKey, string owningOrgCtid, ref bool isValid, ref List<string> messages, string community = "")
+		public string Publish(COOLCredential input, string publisherApiKey, ref bool isValid, ref List<string> messages, string community = "")
 		{
 			var request = new ThisRequest();
 			request.DefaultLanguage = "en-US";
@@ -73,11 +71,8 @@ namespace COOLTool.Services
 
 			#region  Authorization settings
 
-			//if the current org is child org, will need to get parent org CTID
-			request.PublishForOrganizationIdentifier = owningOrgCtid;
-			//if not staff, this will be the CTID for the publishing org
-			//using apiKey now for this relationship
-			//request.PublishByOrganizationIdentifier = myOrg.ctid;
+			//the CTID for the owning org must be present or the publish will fail
+			request.PublishForOrganizationIdentifier = input.OwnedByOrganizationCTID;
 
 			#endregion
 
@@ -92,7 +87,6 @@ namespace COOLTool.Services
 				Identifier = filePrefix,
 				InputPayload = postBody
 			};
-			//AuthorizationToken = credentialEngineApiKey
 
 			if ( IsValidGuid( publisherApiKey ) )
 			{
@@ -101,14 +95,13 @@ namespace COOLTool.Services
 
 			isValid = new RServices().PublishRequest( req );
 			messages.AddRange( req.Messages );
-			//ReportRelatedEntitiesToBePublished( ref messages );
+
 			var crEnvelopeId = req.EnvelopeIdentifier ?? "";
 			if ( !isValid )
 			{
 				//anything??
 			}
-			//globalMonitor.Payload = req.FormattedPayload;
-			//return globalMonitor;
+
 			return req.FormattedPayload;
 		}
 

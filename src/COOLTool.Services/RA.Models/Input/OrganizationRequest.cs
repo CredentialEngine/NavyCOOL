@@ -73,7 +73,7 @@ namespace RA.Models.Input
 			//
             Department = new List<OrganizationReference>();
             SubOrganization = new List<OrganizationReference>();
-            JurisdictionAssertions = new List<JurisdictionAssertedInProfile>();
+            //JurisdictionAssertions = new List<JurisdictionAssertedInProfile>();
 			AlternativeIdentifier = new List<IdentifierValue>();
 
 		}
@@ -213,7 +213,7 @@ namespace RA.Models.Input
         public List<Jurisdiction> Jurisdiction { get; set; }
         public List<Place> Address { get; set; }
 
-        public List<JurisdictionAssertedInProfile> JurisdictionAssertions { get; set; }
+        //public List<JurisdictionAssertedInProfile> JurisdictionAssertions { get; set; }
 
         /// <summary>
         /// Organization performs QA on these entities

@@ -11,15 +11,15 @@ using Utilities;
 
 namespace NavyCOOLPublish
 {
-	public class ManageOrganizations : BaseServices
+	public class ManageAssessments : BaseServices
 	{
 		/// <summary>
 		/// Handle publishing
 		/// </summary>
 		/// <param name="publisherApiKey">Typically retrieved from a database or as an appKey</param>
-		public void Publish( string publisherApiKey )
+		public void Publish(string publisherApiKey)
 		{
-			RequestParameters parms = new RequestParameters( 2 );
+			RequestParameters parms = new RequestParameters( 3 );
 			SetParameters( parms );
 			var community = UtilityManager.GetAppKeyValue( "requestedCommunity" );
 
@@ -27,19 +27,19 @@ namespace NavyCOOLPublish
 
 			if ( !parms.DoingPublish && !parms.DoingGenerate )
 			{
-				DisplayMessages( "OrganizationPublishing - NO ACTION REQUESTS ENDING" );
+				DisplayMessages( "AssessmentPublishing - NO ACTION REQUESTS ENDING" );
 				return;
 			}
 
 			string statusMessage = "";
 			//AppUser user = GetDefaultUser();
 
-			DisplayMessages( "Starting Organizations, with filter: \r\n" + parms.Filter );
+			DisplayMessages( "Starting Assessments, with filter: \r\n" + parms.Filter );
 
 			int pTotalRows = 0;
 			List<string> messages = new List<string>();
 			//do search with minimum results (autocomplete = true)
-			var list = OrganizationManager.Search( parms.Filter, parms.OrderBy, parms.PageNumber, parms.PageSize, ref pTotalRows );
+			var list = AssessmentManager.Search( parms.Filter, parms.OrderBy, parms.PageNumber, parms.PageSize, ref pTotalRows );
 			if ( list != null && list.Count() > 0 )
 			{
 				int cntr = 0;
@@ -48,11 +48,11 @@ namespace NavyCOOLPublish
 					cntr++;
 					messages = new List<string>();
 					statusMessage = "";
-					DisplayMessages( string.Format( " {0}.	Organization: {1} ({2})", cntr, item.CA_AgencyName, item.CA_AgencyID ) );
+					DisplayMessages( string.Format( " {0}.	Assessment: {1} ({2})", cntr, item.CE_Title, item.CE_ID ) );
 					if ( parms.DoingPublish )
 					{
 						//Note that will target the Navy community
-						if ( !new PublishOrganization().Publish( item.CA_AgencyID, publisherApiKey, ref messages, community ) )
+						if ( !new PublishAssessment().Publish( item.CE_ID, publisherApiKey, ref messages, community ) )
 						{
 							DisplayMessages( "                           - FAILED: " + statusMessage );
 							LoggingHelper.LogError( string.Format( "{0} #:{1} Publish failed: {2} ", parms.EntityType, item.CA_AgencyID, statusMessage ), false );
@@ -62,11 +62,11 @@ namespace NavyCOOLPublish
 
 					//payload is output in publish, so skip if doing publish
 					//if( parms.DoingGenerate & !parms.DoingPublish )
-					//	OrganizationFormat( item.Id, user, parms.PayloadPrefix );
+					//	AssessmentFormat( item.Id, user, parms.PayloadPrefix );
 				}
 				if ( cntr > 0 )
 				{
-					DisplayMessages( string.Format( "_____________________ Processed {0} Organizations _____________________", cntr ) );
+					DisplayMessages( string.Format( "_____________________ Processed {0} Assessments _____________________", cntr ) );
 				}
 			}
 

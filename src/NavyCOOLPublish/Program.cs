@@ -12,28 +12,25 @@ namespace NavyCOOLPublish
 	{
 		static void Main(string[] args)
 		{
-			//these can be appKeys eventually
-			bool publishingCredentials = false;
-			bool publishingOrganizations = false;
-			bool publishingAssessments = false;
-
-			if( publishingCredentials )
+			//set the related appKeys to true to request the related publishing
+			string publisherApiKey = UtilityManager.GetAppKeyValue( "ourApiKey" );
+			if ( UtilityManager.GetAppKeyValue( "credDoingPublish", false ))
 			{
-				Console.WriteLine( "Calling PublishCredentials" );
-				new ManageCredentials().Publish();
+				Console.WriteLine( "Calling Credentials Publish" );
+				new ManageCredentials().Publish( publisherApiKey );
 			}
 
-			if( publishingOrganizations )
+			if ( UtilityManager.GetAppKeyValue( "orgDoingPublish", false ) )
 			{
-				Console.WriteLine( "Calling PublishOrganization" );
-				new ManageOrganizations().Publish();
+				Console.WriteLine( "Calling Organizations Publish" );
+				new ManageOrganizations().Publish( publisherApiKey );
 			}
 
-			//if( publishingAssessments )
-			//{
-			//	Console.WriteLine( "Calling PublishAssessments" );
-			//	new PublishAssessments().Publish();
-			//}
+			if ( UtilityManager.GetAppKeyValue( "asmtDoingPublish", false ) )
+			{
+				Console.WriteLine( "Calling Assessments Publish" );
+				new ManageAssessments().Publish( publisherApiKey );
+			}
 
 
 		}

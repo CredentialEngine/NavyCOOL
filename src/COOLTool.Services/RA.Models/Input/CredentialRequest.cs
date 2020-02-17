@@ -222,7 +222,7 @@ namespace RA.Models.Input
         /// Handling assertions in jurisdictions
         /// The current approach is to use a one record per asserting organization. The JurisdictionAssertedInProfile has a list of boolean properties where the assertion(s) can be selected
         /// </summary>
-        public List<JurisdictionAssertedInProfile> JurisdictionAssertions { get; set; }
+        //public List<JurisdictionAssertedInProfile> JurisdictionAssertions { get; set; }
 
 	
 		#endregion

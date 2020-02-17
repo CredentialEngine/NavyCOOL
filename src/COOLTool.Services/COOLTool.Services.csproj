@@ -46,8 +46,10 @@
   <ItemGroup>
     <Compile Include="MappingHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PublishAssessment.cs" />
     <Compile Include="PublishCredential.cs" />
     <Compile Include="PublishOrganization.cs" />
+    <Compile Include="RA.Models\Input\AssessmentRequest.cs" />
     <Compile Include="RA.Models\Input\BaseRequest.cs" />
     <Compile Include="RA.Models\Input\CredentialRequest.cs" />
     <Compile Include="RA.Models\Input\DeleteRequest.cs" />
@@ -72,6 +74,10 @@
     <Compile Include="SampleData.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\COOL.Factories\COOL.Factories.csproj">
+      <Project>{abd281c6-0bc7-4d02-bf6d-5fe204353aac}</Project>
+      <Name>COOL.Factories</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Solid.Models\Solid.Models.csproj">
       <Project>{d9fd7753-10cc-4eb6-8ac3-570b0a443ee2}</Project>
       <Name>Solid.Models</Name>

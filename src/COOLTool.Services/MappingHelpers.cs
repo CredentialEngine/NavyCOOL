@@ -15,7 +15,7 @@ using Newtonsoft.Json.Serialization;
 
 using Utilities;
 
-using Solid.Models;
+using SM= Solid.Models;
 using MIPlace = Solid.Models.Address;
 using MOPlace = RA.Models.Input.Place;
 using RMI = RA.Models.Input;
@@ -26,7 +26,13 @@ namespace COOLTool.Services
 	{
 
 		#region Mapping addresses, juridictions, etc
+		public static List<MOPlace> FormatAvailableAt(List<SM.Address> input)
+		{
+			List<string> messages = new List<string>();
+			return FormatAvailableAtList( input, ref messages );
 
+
+		}
 
 		/// <summary>
 		/// Format AvailableAt
@@ -128,7 +134,7 @@ namespace COOLTool.Services
 
 			return output;
 		}
-		public static List<RMI.Jurisdiction> MapJurisdictions(List<JurisdictionProfile> list, ref List<string> messages)
+		public static List<RMI.Jurisdiction> MapJurisdictions(List<SM.JurisdictionProfile> list, ref List<string> messages)
 		{
 			List<RMI.Jurisdiction> output = new List<RMI.Jurisdiction>();
 			if( list == null || list.Count == 0 )
@@ -144,7 +150,7 @@ namespace COOLTool.Services
 		}
 
 
-		public static RMI.Jurisdiction MapToJurisdiction(JurisdictionProfile profile, ref List<string> messages)
+		public static RMI.Jurisdiction MapToJurisdiction(SM.JurisdictionProfile profile, ref List<string> messages)
 		{
 			var entity = new RMI.Jurisdiction();
 
@@ -177,7 +183,7 @@ namespace COOLTool.Services
 
 		#endregion
 		#region conditions, connections
-		public static List<RMI.ConditionProfile> MapConditionProfiles(List<ConditionProfile> input, ref List<string> messages)
+		public static List<RMI.ConditionProfile> MapConditionProfiles(List<SM.ConditionProfile> input, ref List<string> messages)
 		{
 			var output = new List<RMI.ConditionProfile>();
 
@@ -226,7 +232,7 @@ namespace COOLTool.Services
 				//cp.EstimatedCost = MapToEstimatedCosts( item.EstimatedCost );
 
 				//jurisdictions
-				//foreach( JurisdictionProfile jp in item.Jurisdiction )
+				//foreach( SM.JurisdictionProfile jp in item.Jurisdiction )
 				//{
 				//	cp.Jurisdiction.Add( MapToJurisdiction( jp, ref messages ) );
 				//}
@@ -267,7 +273,7 @@ namespace COOLTool.Services
 		/// <param name="list"></param>
 		/// <param name="messages"></param>
 		/// <returns></returns>
-		public static List<RMI.ConditionProfile> MapAlternativeConditionProfiles( ConditionProfile conditionProfile, List<string> optionsList, ref List<string> messages)
+		public static List<RMI.ConditionProfile> MapAlternativeConditionProfiles( SM.ConditionProfile conditionProfile, List<string> optionsList, ref List<string> messages)
 		{
 			if ( optionsList == null || optionsList.Count == 0 )
 				return null;
@@ -289,7 +295,20 @@ namespace COOLTool.Services
 			return output;
 		}
 		#endregion
-		public static List<RMI.OrganizationReference> MapToOrgReferences( List<Agency> input )
+
+		public static List<RMI.OrganizationReference> MapToOrgReferences(string ctid, bool isQAReference)
+		{
+			List<RMI.OrganizationReference> output = new List<RMI.OrganizationReference>();
+			RMI.OrganizationReference orgRef = new RMI.OrganizationReference();
+			orgRef.CTID = ctid.ToLower();
+			if ( isQAReference )   
+				orgRef.Type = "QACredentialOrganization";
+			else
+				orgRef.Type = "CredentialOrganization";
+			output.Add( orgRef );
+			return output;
+		}
+		public static List<RMI.OrganizationReference> MapToOrgReferences( List<SM.AgencyDTO> input )
 		{
 			List<RMI.OrganizationReference> output = new List<RMI.OrganizationReference>();
 			RMI.OrganizationReference or = new RMI.OrganizationReference();
@@ -300,7 +319,7 @@ namespace COOLTool.Services
 
 			return output;
 		}
-		public static List<RMI.OrganizationReference> MapToOrgReferences(Agency org)
+		public static List<RMI.OrganizationReference> MapToOrgReferences(SM.AgencyDTO org)
 		{
 			List<RMI.OrganizationReference> list = new List<RMI.OrganizationReference>();
 			if( org == null || org.CA_AgencyID == 0 )
@@ -310,7 +329,7 @@ namespace COOLTool.Services
 			return list;
 
 		}
-		public static RMI.OrganizationReference MapToOrgReference(Agency org)
+		public static RMI.OrganizationReference MapToOrgReference(SM.AgencyDTO org)
 		{
 			RMI.OrganizationReference refOut = new RMI.OrganizationReference();
 			if( org == null || org.CA_AgencyID == 0 )
@@ -341,7 +360,6 @@ namespace COOLTool.Services
 			else
 			{
 				//just pass CTID to allow formatting for community as needed
-				//refOut.Id = credRegistryGraphUrl + org.ctid;
 				refOut.CTID = org.CTID.ToLower();
 				if( org.ISQAOrganization )		//would need a means to indicate this
 					refOut.Type = "QACredentialOrganization";
@@ -352,6 +370,17 @@ namespace COOLTool.Services
 
 			return refOut;
 		}//
+
+		public static List<string> MapStringToList(string input)
+		{
+			List<string> output = new List<string>();
+			if ( string.IsNullOrWhiteSpace( input ) )
+				return output;
+
+			output.Add( input );
+			return output;
+		}
+
 
 		#region Helpers for Json, validation, etc.
 		public static JsonSerializerSettings GetJsonSettings()
