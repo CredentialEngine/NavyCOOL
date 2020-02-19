@@ -22,6 +22,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Information", "Information", "{398417CA-BCCF-4608-9284-F5849C483B77}"
 	ProjectSection(SolutionItems) = preProject
 		intro.txt = intro.txt
+		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
 Global
