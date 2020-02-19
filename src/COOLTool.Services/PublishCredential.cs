@@ -168,11 +168,16 @@ namespace COOLTool.Services
 				Type = "QACredentialOrganization",
 				Description = "The ANSI National Accreditation Board (ANAB) is a non-governmental organization that provides accreditation services and training to public- and private-sector organizations, serving the global marketplace."
 			} );
+
 			//condition profile(s)
+			output.Requires = MapConditionProfiles( input.Requires, ref messages );
+
+			//similar if there are recommended conditions
+			output.Recommends = MapConditionProfiles( input.Recommends, ref messages );
 
 			//financial assistance
 			//**SAMPLE** where input has data
-			foreach( var item in input.FinancialAssistance )
+			foreach ( var item in input.FinancialAssistance )
 			{
 				var fa = new RMI.FinancialAssistanceProfile
 				{

@@ -135,6 +135,7 @@ moc_credential.MOCCE_LinkedAs
 		public Cred_Requirements Requirements { get; set; } = new Cred_Requirements();
 
 		public List<ConditionProfile> Requires { get; set; } = new List<ConditionProfile>();
+		public List<ConditionProfile> Recommends { get; set; } = new List<ConditionProfile>();
 
 		#endregion
 

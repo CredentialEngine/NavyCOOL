@@ -3,4 +3,12 @@ If there are plans to make updates to the project, then clone the project locall
 - first install Githb desktop: https://desktop.github.com/       
 - clone the project
 The solution can be opened in Visual Studio. 
-If updates are made that should be pushed back to the Github repo, then use Github desktop to commit and push the changes. 
+If updates are made that should be pushed back to the Github repo, then use Github desktop to commit and push the changes. Actually in Visual Studio 2017+, you should be able to do check ins within VS. 
+
+Workflow
+I used a workflow of:call a 'search' to get a list of candidate documentsfor each record call a method to get all the necessary data (conditions, etc.)Then call a common method that maps from the input document to the classes used by the APIcall the APIrepeat The project: NavyCOOLPublish, is a console app for doing the batch publishing. 
+
+I used two projects for the models:- COOlTool.Models for classes specific to NavyCOOL (where I don't have the details)- Solid.Models for the data transfer objects (DTO). These DTO classes would be used to house data from multiple sources, including the credential, condition profiles, financial information, etc. These fully populated classes would be used when calling the common methods to map to the API classes before publishing.
+
+The CoolTool.Services project has template code for:
+- A publish method that has in integer input parameter. Code would be added to call the relevent NavyCool methods to populate thee DTO- Then call another publish method that expects the DTO as an input parameter- This method maps the DTO to the API classes, then calls the API
