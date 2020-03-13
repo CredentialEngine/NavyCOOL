@@ -201,7 +201,7 @@ namespace Utilities
                         {
 							if (ShouldMessagesBeSkipped(message) == false)
 							{
-								//EmailManager.NotifyAdmin(subject, message);
+								EmailManager.NotifyAdmin(subject, message);
 							}
 
 						}

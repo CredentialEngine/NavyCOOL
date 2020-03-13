@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{CBEC4FE4-AA2C-451B-B94F-74280A5A2965}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>NavyCOOLPublish</RootNamespace>
+    <AssemblyName>NavyCOOLPublish</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BaseServices.cs" />
+    <Compile Include="ManageAssessments.cs" />
+    <Compile Include="ManageCredentials.cs" />
+    <Compile Include="ManageOrganizations.cs" />
+    <Compile Include="Models\RequestParameters.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Utilities\Utilities.csproj">
+      <Project>{273b95b7-0ed5-4092-87fc-f04b0967c759}</Project>
+      <Name>Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NavyCOOLBox.Factories\NavyCOOLBox.Factories.csproj">
+      <Project>{32f7611e-2741-43c3-b19e-91effaf59d2f}</Project>
+      <Name>NavyCOOLBox.Factories</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NavyCOOLBox.Models\NavyCOOLBox.Models.csproj">
+      <Project>{a7a6bc5f-23d5-42a9-aac7-b200dcf456b3}</Project>
+      <Name>NavyCOOLBox.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NavyCOOLBox.Services\NavyCOOLBox.Services.csproj">
+      <Project>{571db016-a245-4107-8510-67b6e0c10e4d}</Project>
+      <Name>NavyCOOLBox.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Solid.Models\Solid.Models.csproj">
+      <Project>{9dd867b2-f8d9-4e77-85bf-ae0836032785}</Project>
+      <Name>Solid.Models</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

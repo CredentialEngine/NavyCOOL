@@ -14,7 +14,7 @@ using System.Web;
 //using System.Web.UI;
 //using System.Web.UI.WebControls;
 
-using Solid.Models;
+//using Solid.Models;
 
 namespace Utilities
 {
@@ -954,7 +954,7 @@ namespace Utilities
 			//Get the properties, and any skippable properties
 			var sourceProperties = source.GetType().GetProperties();
 			var destinationProperties = destination.GetType().GetProperties();
-			var skippableSourceProperties = CoreObject.GetSkippableProperties( source );
+			//var skippableSourceProperties = CoreObject.GetSkippableProperties( source );
 
 			//Do the mapping
 			foreach( var prop in destinationProperties )
@@ -967,10 +967,10 @@ namespace Utilities
 					{
 						//If we aren't allowing skippable values (e.g. Id, RowId, Created, etc.) to be overwritten on update, and
 						//if the source property has an UpdateAttribute with a SkipPropertyOnUpdateValue of "true", skip the property
-						if ( !allowOverwritingSkippableValues && skippableSourceProperties.Contains( match ) )
-						{
-							continue;
-						}
+						//if ( !allowOverwritingSkippableValues && skippableSourceProperties.Contains( match ) )
+						//{
+						//	continue;
+						//}
 
 						//Attempt to map embedded objects if they can't be directly mapped...
 						if ( prop.PropertyType.IsClass && prop.PropertyType != match.PropertyType )
