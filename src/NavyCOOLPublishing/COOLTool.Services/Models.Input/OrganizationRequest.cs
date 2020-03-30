@@ -50,6 +50,8 @@ namespace COOLTool.Services.Models.Input
 		public string CTID { get; set; }
 
 		public string CA_AgencyName { get; set; }
+		//use for AlternateName
+		public string CA_AgencyAcronym { get; set; }
 		public string Description { get; set; }
 		public string CA_AgencyStreetAddress1 { get; set; }
 		public string CA_AgencyCity { get; set; }

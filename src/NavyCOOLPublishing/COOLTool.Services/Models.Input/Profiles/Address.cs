@@ -35,14 +35,6 @@ namespace COOLTool.Services.Models.Input
         public double Latitude { get; set; }
         public double Longitude { get; set; }
 
-        public string LooseDisplayAddress(string separator = ", ") //For easier geocoding
-        {
-            return
-                ( string.IsNullOrWhiteSpace( City ) ? "" : City + separator ) +
-                ( string.IsNullOrWhiteSpace( AddressRegion ) ? "" : AddressRegion + separator ) +
-                ( string.IsNullOrWhiteSpace( PostalCode ) ? "" : PostalCode + " " ) +
-                ( string.IsNullOrWhiteSpace( Country ) ? "" : Country );
-        }
         public bool HasAddress()
         {
             bool hasAddress = true;

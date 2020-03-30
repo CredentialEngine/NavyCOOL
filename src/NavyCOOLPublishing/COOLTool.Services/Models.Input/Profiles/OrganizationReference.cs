@@ -28,6 +28,10 @@ namespace COOLTool.Services.Models.Input
 		public override string Type { get; set; }
 
 		/// <summary>
+		/// The acronym is used for matching input
+		/// </summary>
+		public string Acronym { get; set; }
+		/// <summary>
 		/// Social Media URL links
 		/// For example, Facebook, LinkedIn
 		/// </summary>

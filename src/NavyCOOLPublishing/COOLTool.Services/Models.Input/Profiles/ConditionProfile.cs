@@ -20,10 +20,13 @@ namespace COOLTool.Services.Models.Input
 		public string Description { get; set; }
 
 		/// <summary>
-		/// OptionalConditions - list of options, where there are two or more mutually exclusive paths to the credential
+		/// AlternativeCondition - list of options, where there are two or more mutually exclusive paths to the credential
+		/// pipe delimited string of “name|description” Example:
+		/// “Option 2| Candidate must provide a statement of graduation”  or “|Must be 21” – Note no name given
+		/// 
 		/// </summary>
-		public List<string> OptionalConditions { get; set; } = new List<string>();
-
+		public List<string> AlternativeCondition { get; set; } = new List<string>();
+		//public List<ConditionProfile> AlternativeCondition { get; set; }
 		public string SubjectWebpage { get; set; } //URL
 
 		public string DateEffective { get; set; }
@@ -43,6 +46,7 @@ namespace COOLTool.Services.Models.Input
 		/// <summary>
 		/// Organization that asserts this condition
 		/// This should be single, but as CTDL defines as multi-value, need to handle a List
+		/// NOTE: will default to the owning Agent
 		/// </summary>
 		public List<OrganizationReference> AssertedBy { get; set; } = new List<OrganizationReference>();
 
@@ -50,15 +54,12 @@ namespace COOLTool.Services.Models.Input
 		public int MinimumAge { get; set; }
 		public decimal YearsOfExperience { get; set; }
 		public decimal Weight { get; set; }
-		public List<ConditionProfile> AlternativeCondition { get; set; }
+
 
 		//Credit Information
 		//
 		//public QuantitativeValue CreditValue { get; set; } = new QuantitativeValue();
 		//
-		public string CreditHourType { get; set; }
-		public decimal CreditHourValue { get; set; }
-		//public int CreditUnitTypeId { get; set; }
 
 		/// <summary>
 		/// Only one credit unit type is allowed for input
@@ -68,14 +69,10 @@ namespace COOLTool.Services.Models.Input
 		public decimal CreditUnitValue { get; set; }
 
 		//external classes =====================================
-		//public List<CostProfile> EstimatedCost { get; set; } = new List<CostProfile>();
-		//public List<Jurisdiction> Jurisdiction { get; set; } = new List<Jurisdiction>();
-		//public List<Jurisdiction> ResidentOf { get; set; } = new List<Jurisdiction>();
 
-		public List<EntityReference> TargetAssessment { get; set; }
-		public List<EntityReference> TargetCredential { get; set; }
-		public List<EntityReference> TargetLearningOpportunity { get; set; }
-		//public List<CredentialAlignmentObject> TargetCompetency { get; set; }
+		public List<EntityReference> TargetAssessment { get; set; } = new List<EntityReference>();
+		public List<EntityReference> TargetCredential { get; set; } = new List<EntityReference>();
+		public List<EntityReference> TargetLearningOpportunity { get; set; } = new List<EntityReference>();
 
 
 	}

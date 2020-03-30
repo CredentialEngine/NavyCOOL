@@ -46,6 +46,7 @@ namespace COOLTool.Services
 			string coolInput = JsonConvert.SerializeObject( input, HelperServices.GetJsonSettings() );
 			Utilities.LoggingHelper.WriteLogFile( 5, filePrefix + "_coolInput.json", coolInput, "", false );
 
+			//=======================================================
 			//map from Agency record to the API organization request class
 			MapToAssistant( input.Agency, request.Organization, ref messages );
 
@@ -65,6 +66,7 @@ namespace COOLTool.Services
 				return "";
 			}
 
+			//=======================================================
 			AssistantRequestHelper req = new AssistantRequestHelper()
 			{
 				EndpointType = "organization",
@@ -102,7 +104,12 @@ namespace COOLTool.Services
 			{
 				output.Ctid = input.CTID.ToLower();
 			}
-				
+
+			//
+			CurrentEntityName = output.Name;
+			CurrentEntityType = "Organization";
+			CurrentCtid = output.Ctid;
+			//
 			//custom method for mapping a list of possible multiple types, to a list of strings (with valid concept terms)
 			//if not valuesa, could have a temporary default of orgType:Business
 			if ( input.AgentType != null && input.AgentType.Count() > 0 )
@@ -111,6 +118,8 @@ namespace COOLTool.Services
 				output.AgentType.Add( "orgType:Business" );
 			//possibly could allow a default of agentSector:Public if no value
 			output.AgentSectorType = !string.IsNullOrWhiteSpace(input.AgentSectorType) ? input.AgentSectorType : "agentSector:Public";
+			if ( !string.IsNullOrWhiteSpace( input.CA_AgencyAcronym ) )
+				output.AlternateName.Add( input.CA_AgencyAcronym );
 
 			var place = new RA.Models.Input.Place()
 			{

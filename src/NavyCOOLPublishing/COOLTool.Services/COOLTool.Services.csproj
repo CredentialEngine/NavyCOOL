@@ -32,8 +32,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -60,6 +60,7 @@
     <Compile Include="Models.Input\Profiles\FrameworkItem.cs" />
     <Compile Include="Models.Input\Profiles\JurisdictionProfile.cs" />
     <Compile Include="Models.Input\Profiles\OrganizationReference.cs" />
+    <Compile Include="Models.Input\RatingRequest.cs" />
     <Compile Include="Models.Input\RequestHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AssessmentServices.cs" />
@@ -83,8 +84,10 @@
     <Compile Include="RA.Models\Input\profiles\ProcessProfile.cs" />
     <Compile Include="RA.Models\Input\profiles\QuantitativeValue.cs" />
     <Compile Include="RA.Models\Input\profiles\VerificationServiceProfile.cs" />
+    <Compile Include="RA.Models\Input\RatingRequest.cs" />
     <Compile Include="RA.Models\RegistryAssistantResponse.cs" />
     <Compile Include="RA.Models\RequestStatus.cs" />
+    <Compile Include="RatingServices.cs" />
     <Compile Include="RegistryServices.cs" />
     <Compile Include="SampleData.cs" />
   </ItemGroup>

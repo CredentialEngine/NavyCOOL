@@ -1,33 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 
-using Newtonsoft.Json;
-
-using COOLTool.Services.Models;
-using COOLTool.Services.Models.Input;
-using EntityRequest = COOLTool.Services.Models.Input.OrganizationRequest;
 using COOLTool.Services;
+using COOLTool.Services.Models.Input;
+
 using Utilities;
+
+using EntityRequest = COOLTool.Services.Models.Input.RatingRequest;
 
 namespace NavyCOOL.PublishingAPI.Controllers
 {
-    public class OrganizationController : ApiController
+    public class RatingController : ApiController
     {
-        string thisClassName = "OrganizationController";
-        string controller = "organization";
+        string thisClassName = "RatingController";
+        string controller = "rating";
         RequestHelper helper = new RequestHelper();
-        OrganizationServices mgr = new OrganizationServices();
+        RatingServices mgr = new RatingServices();
 
         /// <summary>
-        /// Publish an Organization to the Credential Engine Registry
+        /// Publish an Rating to the Rating Engine Registry
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost, Route( "organization/publish" )]
+        [HttpPost, Route( "rating/publish" )]
         public ApiPublishResponse Publish(EntityRequest request)
         {
             List<string> messages = new List<string>();
@@ -36,14 +32,13 @@ namespace NavyCOOL.PublishingAPI.Controllers
 
             try
             {
-                //=======================================================
                 if ( request == null )
                 {
-                    response.Messages.Add( "Error - please provide a valid Organization request." );
+                    response.Messages.Add( "Error - please provide a valid Rating request." );
                     return response;
                 }
 
-                LoggingHelper.DoTrace( 2, string.Format( "NavyCOOLPublishingAPI.{0}.Publish request. ctid: {1}", thisClassName, request.Agency.CTID ) );
+                LoggingHelper.DoTrace( 2, string.Format( "NavyCOOLPublishingAPI.{0}.Publish request. ctid: {1}", thisClassName, request.Rating.CTID ) );
 
                 bool isTokenRequired = true;
                 string apiToken = "";
@@ -53,13 +48,13 @@ namespace NavyCOOL.PublishingAPI.Controllers
                     return response;
                 }
                 helper.ApiKey = apiToken;
-                helper.SerializedInput = HelperServices.LogInputFile( request, request.Agency.CTID, "Organization", "Publish", 5 );
-                //=======================================================
+                helper.SerializedInput = HelperServices.LogInputFile( request, request.Rating.CTID, "Rating", "Publish", 5 );
+
                 mgr.Publish( request, helper );
 
                 response.Payload = helper.Payload;
                 response.Successful = helper.IsValidRequest;
-                //=======================================================
+
                 if ( helper.IsValidRequest )
                 {
                     if ( helper.Messages.Count > 0 )
@@ -82,11 +77,11 @@ namespace NavyCOOL.PublishingAPI.Controllers
             return response;
         } //
         /// <summary>
-        /// Delete request of an Organization by CTID and owning organization
+        /// Delete request of an Rating by CTID and owning rating
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpDelete, Route( "organization/delete" )]
+        [HttpDelete, Route( "rating/delete" )]
         public ApiDeleteResponse Delete(DeleteRequest request)
         {
             bool isValid = true;
@@ -97,11 +92,11 @@ namespace NavyCOOL.PublishingAPI.Controllers
             {
                 if ( request == null || request.CTID == null )
                 {
-                    response.Messages.Add( "Error - please provide a valid Organization delete request." );
+                    response.Messages.Add( "Error - please provide a valid Rating delete request." );
                     return response;
                 }
                 //RegistryServices cer = new RegistryServices( controller, "", request.CTID );
-                ////TODO - should a delete be allowed if credentials exist
+                ////TODO - should a delete be allowed if ratings exist
                 //isValid = cer.DeleteRequest( request, controller, ref messages );
                 //if ( isValid )
                 //{
@@ -123,13 +118,5 @@ namespace NavyCOOL.PublishingAPI.Controllers
 
         } //
 
-
-        [HttpPost, Route( "organization/register" )]
-        public ApiPublishResponse Register(EntityRequest request)
-        {
-            var response = new ApiPublishResponse();
-
-            return response;
-        }
     }
 }

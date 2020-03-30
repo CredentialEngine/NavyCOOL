@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 
-using Newtonsoft.Json;
-
-using COOLTool.Services.Models;
-using COOLTool.Services.Models.Input;
-using EntityRequest = COOLTool.Services.Models.Input.CredentialRequest;
 using COOLTool.Services;
+using COOLTool.Services.Models.Input;
+
 using Utilities;
+
+using EntityRequest = COOLTool.Services.Models.Input.CredentialRequest;
 
 namespace NavyCOOL.PublishingAPI.Controllers
 {

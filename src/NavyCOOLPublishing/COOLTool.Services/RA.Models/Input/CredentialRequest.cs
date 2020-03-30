@@ -247,6 +247,7 @@ namespace RA.Models.Input
 		public List<string> AssessmentDeliveryType { get; set; } = new List<string>();
 		public List<string> LearningDeliveryType { get; set; } = new List<string>();
 
+		#region frameworks
 		//List of occupations from a published framework, that is with a web URL
 		public List<FrameworkItem> OccupationType { get; set; }
 		public List<string> AlternativeOccupationType { get; set; } = new List<string>();
@@ -274,7 +275,7 @@ namespace RA.Models.Input
 		/// https://nces.ed.gov/ipeds/cipcode/search.aspx?y=55
 		/// </summary>
 		public List<string> CIP_Codes { get; set; } = new List<string>();
-
+		#endregion
 		//
 		//Navy
 		/// <summary>

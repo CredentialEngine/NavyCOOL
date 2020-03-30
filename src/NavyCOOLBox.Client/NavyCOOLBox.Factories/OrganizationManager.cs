@@ -59,6 +59,7 @@ namespace NavyCOOLBox.Factories
 			//note cool site has a link to a help page
 			/// http://faa.custhelp.com/app/ask
 			agency.CA_AgencyHomePageURL = "https://www.faa.gov/";
+			agency.CA_AgencyAcronym = "FAA";
 			//apparantly a description is available
 			agency.Description = "Our continuing mission is to provide the safest, most efficient aerospace system in the world.";
 

@@ -20,10 +20,9 @@ namespace UnitTestProject1
 			var input = SampleData.Get_FAA();
 			
 			List<string> messages = new List<string>();
-			string crEnvelopeId = "";
 			//NOTE this should be set to empty before publishing to Github
 			string publisherApiKey = UtilityManager.GetAppKeyValue( "coolOrgApiKey" );
-			//157ce70f-2020-0216-8b02-ad549a332115
+			//
 			string community = "navy";
 			try
 			{
@@ -57,9 +56,9 @@ namespace UnitTestProject1
 			var input = SampleData.Get_AircraftDispatcher_As_ARTT();
 			bool isValid = true;
 			List<string> messages = new List<string>();
-			string crEnvelopeId = "";
 			//NOTE this should be set to empty before publishing to Github
 			string publisherApiKey = UtilityManager.GetAppKeyValue( "coolOrgApiKey" );
+
 			string community = "navy";
 			try
 			{
@@ -68,6 +67,7 @@ namespace UnitTestProject1
 				request.Community = community;
 				helper.ApiKey = publisherApiKey;
 
+				
 				var payload = new CredentialServices().Publish( request, helper );
 				if ( helper.IsValidRequest )
 				{

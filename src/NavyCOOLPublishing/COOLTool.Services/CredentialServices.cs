@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using COOLTool.Services.Models.Input;
 
 using Newtonsoft.Json;
 
-using COOLTool.Services.Models.Input;
-using InputRequest = COOLTool.Services.Models.Input.CredentialRequest;
 using InputEntity = COOLTool.Services.Models.Input.Credential;
+using InputRequest = COOLTool.Services.Models.Input.CredentialRequest;
 using OutputRequest = RA.Models.Input.CredentialRequest;
 using OutputRequestEntity = RA.Models.Input.Credential;
-using RA.Models.Input;
-using RMI=RA.Models.Input;
+using RMI = RA.Models.Input;
 using RServices = COOLTool.Services.RegistryServices;
 
 namespace COOLTool.Services
@@ -40,49 +36,59 @@ namespace COOLTool.Services
 			string coolInput = JsonConvert.SerializeObject( input, HelperServices.GetJsonSettings() );
 			Utilities.LoggingHelper.WriteLogFile( 5, filePrefix + "_coolInput.json", coolInput, "", false );
 
-			//map from COOL record to the API organization request class
-			MapToAssistant( input.Credential, request.Credential, ref messages );
-
-			//the CTID for the owning org must be present or the publish will fail
-			request.PublishForOrganizationIdentifier = input.OwningOrganizationCTID;
-
-			//NOTE
-			request.Community = input.Community;
-			//serialize the input (for logging)
-			string postBody = JsonConvert.SerializeObject( request, GetJsonSettings() );
-			//optional to save the input to a file
-			Utilities.LoggingHelper.WriteLogFile( 5, filePrefix + "_coolRaOutput.json", postBody, "", false );
-
-			if ( messages.Count > 0 )
+			try
 			{
-				helper.SetMessages( messages );
-				helper.IsValidRequest = false;
+
+				//map from COOL record to the API organization request class
+				MapToAssistant( input.Credential, request.Credential, ref messages );
+
+				//the CTID for the owning org must be present or the publish will fail
+				request.PublishForOrganizationIdentifier = input.OwningOrganizationCTID;
+
+				//NOTE
+				request.Community = input.Community;
+				//serialize the input (for logging)
+				string postBody = JsonConvert.SerializeObject( request, GetJsonSettings() );
+				//optional to save the input to a file
+				Utilities.LoggingHelper.WriteLogFile( 5, filePrefix + "_coolRaOutput.json", postBody, "", false );
+
+				if ( messages.Count > 0 )
+				{
+					helper.SetMessages( messages );
+					helper.IsValidRequest = false;
+					return "";
+				}
+
+				AssistantRequestHelper req = new AssistantRequestHelper()
+				{
+					EndpointType = "credential",
+					RequestType = "publish",
+					CTID = request.PublishForOrganizationIdentifier,
+					Identifier = filePrefix,
+					InputPayload = postBody
+				};
+
+				req.PublisherApiKey = helper.ApiKey;
+				//
+				helper.IsValidRequest = new RServices().PublishRequest( req );
+				//
+				helper.SetMessages( req.Messages );
+				helper.RegistryEnvelopeId = req.EnvelopeIdentifier ?? "";
+				helper.GraphUrl = req.GraphUrl;
+				helper.EnvelopeUrl = req.EnvelopeUrl;
+				if ( !helper.IsValidRequest )
+				{
+					//anything??
+				}
+				return req.FormattedPayload;
+			}
+			catch ( System.Exception ex )
+			{
+				Utilities.LoggingHelper.LogError( ex, "CredentialServices.Publish", false );
 				return "";
 			}
 
-			AssistantRequestHelper req = new AssistantRequestHelper()
-			{
-				EndpointType = "credential",
-				RequestType = "publish",
-				CTID = request.PublishForOrganizationIdentifier,
-				Identifier = filePrefix,
-				InputPayload = postBody
-			};
-
-			req.PublisherApiKey = helper.ApiKey;
-			//
-			helper.IsValidRequest = new RServices().PublishRequest( req );
-			//
-			helper.SetMessages( req.Messages );
-			helper.RegistryEnvelopeId = req.EnvelopeIdentifier ?? "";
-			helper.GraphUrl = req.GraphUrl;
-			helper.EnvelopeUrl = req.EnvelopeUrl;
-			if ( !helper.IsValidRequest )
-			{
-				//anything??
-			}
-
-			return req.FormattedPayload;
+			
 		}
 
 		public  void MapToAssistant(InputEntity input, OutputRequestEntity output, ref List<string> messages)
@@ -95,11 +101,19 @@ namespace COOLTool.Services
 			}
 
 			output.Name = input.CE_CertTitle;
+			//
+			CurrentEntityName = output.Name;
+			CurrentEntityType = "Credential";
+			CurrentCtid = output.Ctid;
+			//
 			output.Description = input.CE_CertDescription;
 			//SubjectWebpage will be a NavyCOOL url. 
-			output.SubjectWebpage = input.CE_CertURL;
+			output.SubjectWebpage = AssignValidUrlAsString( input.CE_CertURL, "Subject Webpage", ref messages, true );
 			//by agreement, this will be the URL on the provider site
-			output.AvailableOnlineAt = input.AvailableOnlineAt;
+			output.AvailableOnlineAt = AssignValidUrlAsString( input.AvailableOnlineAt, "AvailableOnlineAt", ref messages, false );
+
+			if ( !string.IsNullOrWhiteSpace( input.CE_CertAcronym ))
+				output.AlternateName.Add( input.CE_CertAcronym );
 
 			//?????????????????????????
 			if (input.CE_CertStatus == 1)
@@ -114,8 +128,6 @@ namespace COOLTool.Services
 				messages.Add( string.Format( "Error - Invalid CE_CertStatus: {0}. Valid values are 1-Active, and 3-Suspended.", input.CE_CertStatus ) );
 			}
 
-			//output.CredentialStatusType = string.IsNullOrWhiteSpace( input.CE_CertStatus ) ? "Active" : input.CredentialStatusType; 
-
 			//			
 			//may need a conversion here from Federal License to License, and National Credential to Certification
 
@@ -125,7 +137,7 @@ namespace COOLTool.Services
 				output.CredentialType = "License";
 			else
 			{
-				messages.Add( string.Format( "Error - a valid certification type was not provided: {0}", input.CE_CertType ));
+				messages.Add( string.Format( "Error - a valid certification type was not provided: {0}. Valid values are C for certificate, or L for License.", input.CE_CertType ));
 			}
 
 			//if ( input.CredentialType == "State License" )
@@ -182,27 +194,16 @@ namespace COOLTool.Services
 				Description = "The ANSI National Accreditation Board (ANAB) is a non-governmental organization that provides accreditation services and training to public- and private-sector organizations, serving the global marketplace."
 			} );
 			*/
+			output.AccreditedBy = HandleAccreditations( input.cred_AccreditedBy, ref messages );
 
 			//condition profile(s)
-			//output.Requires = MapConditionProfiles( input.Requires, ref messages );
+			output.Requires = MapConditionProfiles( input.cred_ConditionProfiles, ref messages );
 
 			//similar if there are recommended conditions
 			//output.Recommends = MapConditionProfiles( input.Recommends, ref messages );
 
 			//financial assistance
-			//**SAMPLE** where input has data
-			/*
-			foreach ( var item in input.FinancialAssistance )
-			{
-				var fa = new RMI.FinancialAssistanceProfile
-				{
-					Name = item.Name,
-					Description = item.Description,
-					SubjectWebpage = item.SubjectWebpage,
-				};
-				output.FinancialAssistance.Add( fa );
-			}
-			*/
+			output.FinancialAssistance = HandleFinancialAssistance( input.cred_FinancialAssistance, ref messages );
 
 			//
 			//if( input.Jurisdiction != null && input.Jurisdiction.Count > 0 )
@@ -222,7 +223,32 @@ namespace COOLTool.Services
 			//{
 			//	Years = 2
 			//};
-
+			if (!string.IsNullOrWhiteSpace(input.CE_RenewalPeriod))
+			{
+				if ( input.CE_RenewalPeriod.ToLower().IndexOf( "lifetime") > -1 
+					|| input.CE_RenewalPeriod.ToLower().IndexOf( "jump" ) > -1 
+					|| input.CE_RenewalPeriod.ToLower().IndexOf( "dive" ) > -1
+					|| input.CE_RenewalPeriod.ToLower().IndexOf( "varies" ) > -1
+					|| input.CE_RenewalPeriod.ToLower().IndexOf( "not renewable" ) > -1
+					)
+				{
+					//skip
+				} 
+				else if ( input.CE_RenewalPeriod.IndexOf( "P" ) == 0 )
+				{
+					//ISO 8601 format
+					output.RenewalFrequency = new RMI.DurationItem()
+					{
+						Duration_ISO8601 = input.CE_RenewalPeriod.Trim()
+					};
+				}
+				else
+				{
+					var rn = AssignDuration( input.CE_RenewalPeriod, ref messages, false, true );
+					if ( rn != null )
+						output.RenewalFrequency = rn.ExactDuration;
+				}
+			}
 			//renewal conditions
 			//list of condition profiles with renewal information
 			//not sure of the input format
@@ -233,6 +259,99 @@ namespace COOLTool.Services
 			//output.Keyword = input.Keywords;
 
 			//costs??
+		}
+
+		public List<RMI.OrganizationReference> HandleAccreditations(List<string> input, ref List<string> messages )
+		{
+			var output = new List<RMI.OrganizationReference>();
+			if ( input == null || input.Count == 0 )
+				return null;
+
+			//get list of QA orgs
+			var qaOrgs = GetQAOrganizations();
+
+			var cntr = 0;
+			foreach (var item in input)
+			{
+				cntr++;
+				if ( string.IsNullOrWhiteSpace( item ) )
+					continue;
+
+				//the input could be just an acronym or acronym | subjectWebpage ANSI-
+				string[] parts = item.Split( '|' );
+				var acronym = parts[ 0 ].Trim();
+				var qaOrg = qaOrgs.FirstOrDefault( s => s.Acronym == acronym );
+				if (qaOrg == null || string.IsNullOrWhiteSpace(qaOrg.Acronym))
+				{
+					messages.Add( string.Format( "Error: QA # {0}, Acronym: {1}. is not a known QA organization", cntr, acronym ) );
+					continue;
+				}
+				var qaOut = new RMI.OrganizationReference()
+				{
+					Type = qaOrg.Type,
+					Name = qaOrg.Name,
+					Description = qaOrg.Description,
+					SubjectWebpage = qaOrg.SubjectWebpage,
+					CTID = qaOrg.CTID
+				};
+
+				if ( parts.Count() == 2 )
+				{
+					//should be url
+					qaOut.SubjectWebpage = parts[ 1 ];
+
+				}//else ignore for now
+
+				output.Add( qaOut );
+			}
+
+			return output;
+		}
+
+		public List<RMI.FinancialAssistanceProfile> HandleFinancialAssistance(List<string> input, ref List<string> messages)
+		{
+
+			var output = new List<RMI.FinancialAssistanceProfile>();
+			if ( input == null || input.Count == 0 )
+				return null;
+			//GetFinancialAssistanceTypes
+			//get list of QA orgs
+			var faTypes = GetFinancialAssistanceTypes();
+
+			var cntr = 0;
+			foreach ( var item in input )
+			{
+				cntr++;
+				if ( string.IsNullOrWhiteSpace( item ) )
+					continue;
+
+				//the input could be just an acronym or acronym | subjectWebpage
+				string[] parts = item.Split( '|' );
+				var acronym = parts[ 0 ].Trim();
+				var fa = faTypes.FirstOrDefault( s => s.Acronym == acronym );
+				if ( fa == null || string.IsNullOrWhiteSpace( fa.Acronym ) )
+				{
+					messages.Add( string.Format( "Error: # {0}, Acronym: {1}. is not a known Financial Assistance type.", cntr, acronym ) );
+					continue;
+				}
+				var faOut = new RMI.FinancialAssistanceProfile()
+				{
+					Name = fa.Name,
+					Description = fa.Description,
+					SubjectWebpage = fa.SubjectWebpage
+				};
+
+				if ( parts.Count() == 2 )
+				{
+					//should be url
+					faOut.SubjectWebpage = parts[ 1 ];
+
+				}//else ignore for now
+
+				output.Add( faOut );
+			}
+
+			return output;
 		}
 	}
 }
