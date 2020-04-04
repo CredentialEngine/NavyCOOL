@@ -58,8 +58,6 @@ namespace COOLTool.Services.Models.Input
 
 		}
 
-
-
 		#region *** Required Properties ***
 		public string Name { get; set; }
 
